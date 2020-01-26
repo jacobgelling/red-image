@@ -25,9 +25,9 @@ int main(const int argc, char *argv[]) {
         // Correct number of arguments provided
         case 5:
             if (strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--decode") == 0) {
-                return_code = EXIT_FAILURE;
+                return_code = image_to_gif(argv[2], argv[3], argv[4]);
             } else if (strcmp(argv[1], "-e") == 0 || strcmp(argv[1], "--encode") == 0) {
-                return_code = EXIT_FAILURE;
+                return_code = gif_to_image(argv[2], argv[3], argv[4]);
             } else {
                 fprintf(stderr, "Unknown option %s\n", argv[1]);
                 return EXIT_FAILURE;
