@@ -1,0 +1,13 @@
+/*
+ * Red Image
+ * MIT License
+ * Copyright (c) 2020 Jacob Gelling
+ */
+
+#ifndef REDIMAGE_VERSION_H
+#define REDIMAGE_VERSION_H
+
+#define REDIMAGE_VERSION_MAJOR @red-archive_VERSION_MAJOR@
+#define REDIMAGE_VERSION_MINOR @red-archive_VERSION_MINOR@
+
+#endif
