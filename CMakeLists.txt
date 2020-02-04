@@ -12,13 +12,13 @@ project(red-image LANGUAGES C VERSION 0.1)
 configure_file(${PROJECT_SOURCE_DIR}/include/version.h.in ${PROJECT_SOURCE_DIR}/include/version.h)
 
 # Include header files
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/gifenc ${PROJECT_SOURCE_DIR}/gifdec)
 
 # Set output folder
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 # Set executables to compile
-add_executable(red-archive ${PROJECT_SOURCE_DIR}/src/cli.c ${PROJECT_SOURCE_DIR}/src/image.c)
+add_executable(red-archive ${PROJECT_SOURCE_DIR}/src/cli.c ${PROJECT_SOURCE_DIR}/src/image.c ${PROJECT_SOURCE_DIR}/gifenc/gifenc.c ${PROJECT_SOURCE_DIR}/gifdec/gifdec.c)
 
 # Display all warnings
 set(CMAKE_C_FLAGS "-Wall -Wextra")
