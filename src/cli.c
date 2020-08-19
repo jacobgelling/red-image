@@ -17,9 +17,9 @@ int main(const int argc, char *argv[]) {
             printf("MIT License\n");
             printf("Copyright (c) 2020 Jacob Gelling\n\n");
             printf("  To decode a image into a GIF:\n");
-            printf("  %s -d image gif palette\n\n", argv[0]);
+            printf("  %s -d image palette gif\n\n", argv[0]);
             printf("  To encode a GIF into a image:\n");
-            printf("  %s -e gif image palette\n", argv[0]);
+            printf("  %s -e gif palette image\n", argv[0]);
             break;
 
         // Correct number of arguments provided

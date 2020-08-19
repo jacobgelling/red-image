@@ -11,7 +11,7 @@
 #include "gifenc.h"
 #include "gifdec.h"
 
-int image_to_gif(const char *image_path, const char *gif_path, const char *palette_path);
-int gif_to_image(const char *gif_path, const char *image_path, const char *palette_path);
+int image_to_gif(const char *image_path, const char *palette_path, const char *gif_path);
+int gif_to_image(const char *gif_path, const char *palette_path, const char *image_path);
 
 #endif
