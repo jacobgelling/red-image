@@ -7,7 +7,10 @@
 #ifndef REDIMAGE_ARCHIVE_H
 #define REDIMAGE_ARCHIVE_H
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
 #include "gifenc.h"
 #include "gifdec.h"
 
