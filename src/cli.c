@@ -7,9 +7,6 @@
 #include "cli.h"
 
 int main(const int argc, char *argv[]) {
-    // Set return code to success
-    int return_code = EXIT_SUCCESS;
-
     switch (argc) {
         // No arguments provided
         case 1:
@@ -25,9 +22,13 @@ int main(const int argc, char *argv[]) {
         // Correct number of arguments provided for external palette
         case 5:
             if (strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--decode") == 0) {
-                return_code = image_to_gif(argv[2], argv[3], argv[4]);
+                if (image_to_gif(argv[2], argv[3], argv[4]) != 1) {
+                    return EXIT_FAILURE;
+                }
             } else if (strcmp(argv[1], "-e") == 0 || strcmp(argv[1], "--encode") == 0) {
-                return_code = gif_to_image(argv[2], argv[3], argv[4]);
+                if (gif_to_image(argv[2], argv[3], argv[4]) != 1) {
+                    return EXIT_FAILURE;
+                }
             } else {
                 fprintf(stderr, "Unknown option %s\n", argv[1]);
                 return EXIT_FAILURE;
@@ -37,9 +38,13 @@ int main(const int argc, char *argv[]) {
         // Correct number of arguments provided for embedded palette
         case 4:
             if (strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--decode") == 0) {
-                return_code = embedded_image_to_gif(argv[2], argv[3]);
+                if (embedded_image_to_gif(argv[2], argv[3]) != 1) {
+                    return EXIT_FAILURE;
+                }
             } else if (strcmp(argv[1], "-e") == 0 || strcmp(argv[1], "--encode") == 0) {
-                return_code = gif_to_embedded_image(argv[2], argv[3]);
+                if (gif_to_embedded_image(argv[2], argv[3]) != 1) {
+                    return EXIT_FAILURE;
+                }
             } else {
                 fprintf(stderr, "Unknown option %s\n", argv[1]);
                 return EXIT_FAILURE;
@@ -52,5 +57,5 @@ int main(const int argc, char *argv[]) {
             return EXIT_FAILURE;
     }
 
-    return return_code;
+    return EXIT_SUCCESS;
 }
