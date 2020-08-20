@@ -30,35 +30,14 @@ int image_to_gif(const char *image_path, const char *palette_path, const char *g
     const size_t image_size = get_file_size(image_pointer);
     uint16_t image_width = 0;
     uint16_t image_height = 0;
-    switch (image_size) {
-        // .TM image
-        case tm_size:
-            image_width = 256;
-            image_height = 192;
-            break;
-
-        // .RAW image (check width and height are correct)
-        // case raw_size:
-        //     image_width = 320;
-        //     image_height = 200;
-        //     break;
-
-        // .MPH heightmap
-        // case mph_size:
-        //     image_width = 256;
-        //     image_height = 256;
-        //     break;
-
-        // .COL colour palette
-        // case col_size:
-        //     image_width = 16;
-        //     image_height = 16;
-        //     break;
-
-        default:
-            fclose(image_pointer);
-            fprintf(stderr, "Unsupported image size\n");
-            return EXIT_FAILURE;
+    if (image_size == tm_size) {
+        image_width = 256;
+        image_height = 192;
+    } else {
+        fclose(image_pointer);
+        fprintf(stderr, "Unsupported image size\n");
+        fprintf(stderr, "Please check whether a palette should be specified\n");
+        return EXIT_FAILURE;
     }
 
     // Read image data file
