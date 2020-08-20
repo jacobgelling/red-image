@@ -404,7 +404,7 @@ int gif_to_embedded_image(const char *gif_path, const char *image_path) {
             return gif_to_col(gif, image_path);
 
         // .MPH heightmap
-        case MPH_SIZE - COL_SIZE:
+        case MPH_SIZE:
             return gif_to_mph(gif, image_path);
 
         // .RAW image
