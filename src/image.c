@@ -215,6 +215,12 @@ int embedded_image_to_gif(const char *image_path, const char *gif_path) {
 }
 
 int gif_to_col(gd_GIF *gif, const char *image_path) {
+    // Check palette size
+    if (gif->palette->size != 256) {
+        fprintf(stderr, "Unsupported colour palette size\n");
+        return 0;
+    }
+
     // Convert gif frame to image
     uint8_t *palette = malloc(COL_SIZE);
     memcpy(palette, gif->frame, COL_SIZE);
@@ -254,9 +260,11 @@ int gif_to_col(gd_GIF *gif, const char *image_path) {
 }
 
 int gif_to_mph(gd_GIF *gif, const char *image_path) {
-    // TODO: Get gif colour palette
-
-    // TODO: Re-reference colour values to closest match on greyscale colour palette
+    // Check palette size
+    if (gif->palette->size != 256) {
+        fprintf(stderr, "Unsupported colour palette size\n");
+        return 0;
+    }
 
     // Convert gif frame to image
     uint8_t *image_data = malloc(MPH_SIZE);
@@ -284,7 +292,11 @@ int gif_to_mph(gd_GIF *gif, const char *image_path) {
 }
 
 int gif_to_raw(gd_GIF *gif, const char *image_path) {
-    // TODO: Convert gif colour palette into image colour palette
+    // Check palette size
+    if (gif->palette->size != 256) {
+        fprintf(stderr, "Unsupported colour palette size\n");
+        return 0;
+    }
 
     // Convert gif frame to image
     uint8_t *image_data = malloc(RAW_SIZE);
@@ -314,9 +326,11 @@ int gif_to_raw(gd_GIF *gif, const char *image_path) {
 }
 
 int gif_to_tm(gd_GIF *gif, const char *palette_path, const char *image_path) {
-    // TODO: Get gif colour palette
-
-    // TODO: Re-reference colour values to closest match on colour palette
+    // Check palette size
+    if (gif->palette->size != 256) {
+        fprintf(stderr, "Unsupported colour palette size\n");
+        return 0;
+    }
 
     // Convert gif frame to image
     uint8_t *image_data = malloc(TM_SIZE);
@@ -393,15 +407,15 @@ int gif_to_embedded_image(const char *gif_path, const char *image_path) {
     // Get file size to determine file type
     switch (gif->width * gif->height) {
         // .COL colour palette
-        case COL_SIZE:
+        case 256:
             return gif_to_col(gif, image_path);
 
         // .MPH heightmap
-        case MPH_SIZE:
+        case MPH_SIZE - COL_SIZE:
             return gif_to_mph(gif, image_path);
 
         // .RAW image
-        case RAW_SIZE:
+        case RAW_SIZE - COL_SIZE:
             return gif_to_raw(gif, image_path);
 
         default:
