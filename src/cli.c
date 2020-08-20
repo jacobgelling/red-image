@@ -22,12 +22,24 @@ int main(const int argc, char *argv[]) {
             printf("  %s -e gif palette image\n", argv[0]);
             break;
 
-        // Correct number of arguments provided
+        // Correct number of arguments provided for external palette
         case 5:
             if (strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--decode") == 0) {
                 return_code = image_to_gif(argv[2], argv[3], argv[4]);
             } else if (strcmp(argv[1], "-e") == 0 || strcmp(argv[1], "--encode") == 0) {
                 return_code = gif_to_image(argv[2], argv[3], argv[4]);
+            } else {
+                fprintf(stderr, "Unknown option %s\n", argv[1]);
+                return EXIT_FAILURE;
+            }
+            break;
+
+        // Correct number of arguments provided for embedded palette
+        case 4:
+            if (strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--decode") == 0) {
+                return_code = embedded_image_to_gif(argv[2], argv[3]);
+            } else if (strcmp(argv[1], "-e") == 0 || strcmp(argv[1], "--encode") == 0) {
+                return_code = gif_to_embedded_image(argv[2], argv[3]);
             } else {
                 fprintf(stderr, "Unknown option %s\n", argv[1]);
                 return EXIT_FAILURE;
