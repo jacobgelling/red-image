@@ -214,25 +214,132 @@ int embedded_image_to_gif(const char *image_path, const char *gif_path) {
     return 1;
 }
 
+int gif_to_col(gd_GIF *gif, const char *image_path) {
+    // TODO: Get gif colour palette
+
+    // TODO: Re-reference colour values to closest match on greyscale colour palette
+
+    // Convert gif frame to image
+    uint8_t *image_data = malloc(COL_SIZE);
+    memcpy(image_data, gif->frame, COL_SIZE);
+    gd_close_gif(gif);
+
+    // Open image
+    FILE *image_pointer = NULL;
+    if ((image_pointer = fopen(image_path, "wb")) == NULL) {
+        fprintf(stderr, "Error creating image file\n");
+        return 0;
+    }
+
+    // Write image data to file
+    int write_status = fwrite(image_data, COL_SIZE, 1, image_pointer);
+    fclose(image_pointer);
+    free(image_data);
+    if (write_status != 1) {
+        fprintf(stderr, "Error writing image data to file\n");
+        return 0;
+    }
+
+    // Close and return
+    return 1;
+}
+
+int gif_to_mph(gd_GIF *gif, const char *image_path) {
+    // TODO: Get gif colour palette
+
+    // TODO: Re-reference colour values to closest match on greyscale colour palette
+
+    // Convert gif frame to image
+    uint8_t *image_data = malloc(MPH_SIZE);
+    memcpy(image_data, gif->frame, MPH_SIZE);
+    gd_close_gif(gif);
+
+    // Open image
+    FILE *image_pointer = NULL;
+    if ((image_pointer = fopen(image_path, "wb")) == NULL) {
+        fprintf(stderr, "Error creating image file\n");
+        return 0;
+    }
+
+    // Write image data to file
+    int write_status = fwrite(image_data, MPH_SIZE, 1, image_pointer);
+    fclose(image_pointer);
+    free(image_data);
+    if (write_status != 1) {
+        fprintf(stderr, "Error writing image data to file\n");
+        return 0;
+    }
+
+    // Close and return
+    return 1;
+}
+
+int gif_to_raw(gd_GIF *gif, const char *image_path) {
+    // TODO: Convert gif colour palette into image colour palette
+
+    // Convert gif frame to image
+    uint8_t *image_data = malloc(RAW_SIZE);
+    memcpy(image_data, gif->frame, RAW_SIZE);
+    gd_close_gif(gif);
+
+    // Open image
+    FILE *image_pointer = NULL;
+    if ((image_pointer = fopen(image_path, "wb")) == NULL) {
+        fprintf(stderr, "Error creating image file\n");
+        return 0;
+    }
+
+    // Write colour palette to file
+
+    // Write image data to file
+    int write_status = fwrite(image_data, RAW_SIZE, 1, image_pointer);
+    fclose(image_pointer);
+    free(image_data);
+    if (write_status != 1) {
+        fprintf(stderr, "Error writing image data to file\n");
+        return 0;
+    }
+
+    // Close and return
+    return 1;
+}
+
+int gif_to_tm(gd_GIF *gif, const char *palette_path, const char *image_path) {
+    // TODO: Get gif colour palette
+
+    // TODO: Re-reference colour values to closest match on colour palette
+
+    // Convert gif frame to image
+    uint8_t *image_data = malloc(TM_SIZE);
+    memcpy(image_data, gif->frame, TM_SIZE);
+    gd_close_gif(gif);
+
+    // Open image
+    FILE *image_pointer = NULL;
+    if ((image_pointer = fopen(image_path, "wb")) == NULL) {
+        fprintf(stderr, "Error creating image file\n");
+        return 0;
+    }
+
+    // Write image data to file
+    int write_status = fwrite(image_data, TM_SIZE, 1, image_pointer);
+    fclose(image_pointer);
+    free(image_data);
+    if (write_status != 1) {
+        fprintf(stderr, "Error writing image data to file\n");
+        return 0;
+    }
+
+    // Close and return
+    return 1;
+}
+
 int gif_to_image(const char *gif_path, const char *palette_path, const char *image_path) {
-    // Open gif
+    // Open gif file
     gd_GIF *gif = gd_open_gif(gif_path);
     if(gif == NULL) {
         fprintf(stderr, "Error opening gif\n");
         return 0;
-    }
-
-    // Check gif
-    // TODO: do this better
-    switch (gif->width * gif->height) {
-        // .TM image
-        case TM_SIZE:
-            break;
-
-        default:
-            gd_close_gif(gif);
-            fprintf(stderr, "Unsupported gif size\n");
-            return 0;
     }
 
     // Check gif frame
@@ -243,35 +350,58 @@ int gif_to_image(const char *gif_path, const char *palette_path, const char *ima
         return 0;
     }
 
-    // Get gif colour palette
+    // Get file size to determine file type
+    switch (gif->width * gif->height) {
+        // .TM image
+        case TM_SIZE:
+            return gif_to_tm(gif, palette_path, image_path);
 
-    // Convert gif frame to image
-    uint8_t *image_data = malloc(gif->width * gif->height);
-    memcpy(image_data, gif->frame, gif->width * gif->height);
-
-    // Open image
-    FILE *image_pointer = NULL;
-    if ((image_pointer = fopen(image_path, "wb")) == NULL) {
-        fprintf(stderr, "Error creating image file\n");
-        return 0;
+        default:
+            gd_close_gif(gif);
+            fprintf(stderr, "Unsupported gif size\n");
+            return 0;
     }
 
-    // Write image data to file
-    int write_status = fwrite(image_data, gif->width * gif->height, 1, image_pointer);
-    fclose(image_pointer);
-    free(image_data);
-    if (write_status != 1) {
-        fprintf(stderr, "Error writing image data to file\n");
-        return 0;
-    }
-
-    // Close and return
-    gd_close_gif(gif);
     return 1;
 }
 
 int gif_to_embedded_image(const char *gif_path, const char *image_path) {
-    return 0;
+    // Open gif file
+    gd_GIF *gif = gd_open_gif(gif_path);
+    if(gif == NULL) {
+        fprintf(stderr, "Error opening gif\n");
+        return 0;
+    }
+
+    // Check gif frame
+    gd_get_frame(gif);
+    if(gif->frame == NULL) {
+        gd_close_gif(gif);
+        fprintf(stderr, "Unsupported gif frame\n");
+        return 0;
+    }
+
+    // Get file size to determine file type
+    switch (gif->width * gif->height) {
+        // .COL colour palette
+        case COL_SIZE:
+            return gif_to_col(gif, image_path);
+
+        // .MPH heightmap
+        case MPH_SIZE:
+            return gif_to_mph(gif, image_path);
+
+        // .RAW image
+        case RAW_SIZE:
+            return gif_to_raw(gif, image_path);
+
+        default:
+            gd_close_gif(gif);
+            fprintf(stderr, "Unsupported gif size\n");
+            return 0;
+    }
+
+    return 1;
 }
 
 int read_palette(uint8_t *palette, FILE *palette_pointer) {

@@ -22,6 +22,11 @@ int tm_to_gif(FILE *file_pointer, const char *palette_path, const char *gif_path
 int image_to_gif(const char *image_path, const char *palette_path, const char *gif_path);
 int embedded_image_to_gif(const char *image_path, const char *gif_path);
 
+int gif_to_col(gd_GIF *gif, const char *image_path);
+int gif_to_mph(gd_GIF *gif, const char *image_path);
+int gif_to_raw(gd_GIF *gif, const char *image_path);
+int gif_to_tm(gd_GIF *gif, const char *palette_path, const char *image_path);
+
 int gif_to_image(const char *gif_path, const char *palette_path, const char *image_path);
 int gif_to_embedded_image(const char *gif_path, const char *image_path);
 
