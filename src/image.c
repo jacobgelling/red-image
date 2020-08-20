@@ -223,18 +223,11 @@ int gif_to_col(gd_GIF *gif, const char *image_path) {
 
     // Convert gif frame to image
     uint8_t *palette = malloc(COL_SIZE);
-    memcpy(palette, gif->frame, COL_SIZE);
+    memcpy(palette, gif->palette->colors, COL_SIZE);
     gd_close_gif(gif);
 
     // Scale palette colour values
-    for(int i = 0; i < COL_SIZE; i++) {
-        // Check colour is valid
-        if(palette[i] >= 64) {
-            free(palette);
-            fprintf(stderr, "Unsupported colour palette value\n");
-            return 0;
-        }
-
+    for (int i = 0; i < COL_SIZE; i++) {
         // Divide by 4 to scale to 64 colours
         palette[i] /= 4;
     }
