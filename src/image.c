@@ -135,10 +135,10 @@ int gif_to_image(const char *gif_path, const char *palette_path, const char *ima
     }
 
     // Check gif
-    // todo this better
+    // TODO: do this better
     switch (gif->width * gif->height) {
         // .TM image
-        case 49152:
+        case tm_size:
             break;
 
         default:
