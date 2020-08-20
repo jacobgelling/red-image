@@ -7,9 +7,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #ifdef _WIN32
-#include <io.h>
+    #include <io.h>
 #else
-#include <unistd.h>
+    #include <unistd.h>
 #endif
 
 /* helper to write a little-endian 16-bit number portably */
