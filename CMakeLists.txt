@@ -18,7 +18,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/gifenc $
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 # Set executables to compile
-add_executable(red-archive ${PROJECT_SOURCE_DIR}/src/cli.c ${PROJECT_SOURCE_DIR}/src/image.c ${PROJECT_SOURCE_DIR}/gifenc/gifenc.c ${PROJECT_SOURCE_DIR}/gifdec/gifdec.c)
+add_executable(red-image ${PROJECT_SOURCE_DIR}/src/cli.c ${PROJECT_SOURCE_DIR}/src/image.c ${PROJECT_SOURCE_DIR}/gifenc/gifenc.c ${PROJECT_SOURCE_DIR}/gifdec/gifdec.c)
 
 # Display all warnings
 set(CMAKE_C_FLAGS "-Wall")
