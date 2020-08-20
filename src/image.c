@@ -221,7 +221,7 @@ int gif_to_col(gd_GIF *gif, const char *image_path) {
         return 0;
     }
 
-    // Convert gif frame to image
+    // Read colour palette
     uint8_t *palette = malloc(COL_SIZE);
     memcpy(palette, gif->palette->colors, COL_SIZE);
     gd_close_gif(gif);
@@ -291,9 +291,19 @@ int gif_to_raw(gd_GIF *gif, const char *image_path) {
         return 0;
     }
 
+    // Read colour palette
+    uint8_t *palette = malloc(COL_SIZE);
+    memcpy(palette, gif->palette->colors, COL_SIZE);
+
+    // Scale palette colour values
+    for (int i = 0; i < COL_SIZE; i++) {
+        // Divide by 4 to scale to 64 colours
+        palette[i] /= 4;
+    }
+
     // Convert gif frame to image
-    uint8_t *image_data = malloc(RAW_SIZE);
-    memcpy(image_data, gif->frame, RAW_SIZE);
+    uint8_t *image_data = malloc(RAW_SIZE - COL_SIZE);
+    memcpy(image_data, gif->frame, RAW_SIZE - COL_SIZE);
     gd_close_gif(gif);
 
     // Open image
@@ -305,9 +315,16 @@ int gif_to_raw(gd_GIF *gif, const char *image_path) {
     }
 
     // Write colour palette to file
+    int write_status = fwrite(palette, COL_SIZE, 1, image_pointer);
+    free(palette);
+    if (write_status != 1) {
+        fclose(image_pointer);
+        fprintf(stderr, "Error writing image data to file\n");
+        return 0;
+    }
 
     // Write image data to file
-    int write_status = fwrite(image_data, RAW_SIZE, 1, image_pointer);
+    write_status = fwrite(image_data, RAW_SIZE - COL_SIZE, 1, image_pointer);
     fclose(image_pointer);
     free(image_data);
     if (write_status != 1) {
