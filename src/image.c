@@ -6,6 +6,11 @@
 
 #include "image.h"
 
+static const size_t col_size = 768;
+static const size_t tm_size = 49152;
+static const size_t raw_size = 64768;
+static const size_t mph_size = 65536;
+
 static size_t get_file_size(FILE *file_pointer) {
     fseek(file_pointer, 0, SEEK_END);
     const size_t file_size = ftell(file_pointer);
@@ -27,25 +32,25 @@ int image_to_gif(const char *image_path, const char *palette_path, const char *g
     uint16_t image_height = 0;
     switch (image_size) {
         // .TM image
-        case 49152:
+        case tm_size:
             image_width = 256;
             image_height = 192;
             break;
 
         // .RAW image (check width and height are correct)
-        // case 64768:
+        // case raw_size:
         //     image_width = 320;
         //     image_height = 200;
         //     break;
 
         // .MPH heightmap
-        // case 65536:
+        // case mph_size:
         //     image_width = 256;
         //     image_height = 256;
         //     break;
 
         // .COL colour palette
-        // case 768:
+        // case col_size:
         //     image_width = 16;
         //     image_height = 16;
         //     break;
@@ -76,7 +81,7 @@ int image_to_gif(const char *image_path, const char *palette_path, const char *g
 
     // Check palette size
     const size_t palette_size = get_file_size(palette_pointer);
-    if(palette_size != 768) {
+    if(palette_size != col_size) {
         fclose(palette_pointer);
         free(image_data);
         fprintf(stderr, "Unsupported palette size\n");
@@ -84,8 +89,8 @@ int image_to_gif(const char *image_path, const char *palette_path, const char *g
     }
 
     // Read palette file
-    uint8_t palette[768];
-    if (fread(&palette, 768, 1, palette_pointer) != 1) {
+    uint8_t palette[col_size];
+    if (fread(&palette, col_size, 1, palette_pointer) != 1) {
         fclose(palette_pointer);
         free(image_data);
         fprintf(stderr, "Could not read colour palette\n");
@@ -94,7 +99,7 @@ int image_to_gif(const char *image_path, const char *palette_path, const char *g
     fclose(palette_pointer);
 
     // Scale palette colour values
-    for(int i = 0; i < 768; i++) {
+    for(int i = 0; i < col_size; i++) {
         // Check colour is valid
         if(palette[i] >= 64) {
             free(image_data);
