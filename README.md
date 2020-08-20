@@ -1,5 +1,5 @@
 # Red Image
-Program to handle textures and heightmaps from the 1995 title Big Red Racing.
+Program to handle colour palettes, heightmaps and textures from the 1995 title Big Red Racing.
 
 The following file types from Big Red Racing are supported.
  * `.COL` colour palettes
