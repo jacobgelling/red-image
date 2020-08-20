@@ -2,10 +2,10 @@
 Program to handle textures and heightmaps from the 1995 title Big Red Racing.
 
 The following file types from Big Red Racing are supported.
- * `.COL`
- * `.MPH`
- * `.RAW`
- * `.TM`
+ * `.COL` colour palettes
+ * `.MPH` heightmaps
+ * `.RAW` textures
+ * `.TM` textures (require a colour palette to be given)
 
 ## Usage
 The latest binaries for Windows and Debian are available at [GitHub Releases](https://github.com/jacobgelling/red-image/releases/latest).
