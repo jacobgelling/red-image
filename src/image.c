@@ -215,32 +215,41 @@ int embedded_image_to_gif(const char *image_path, const char *gif_path) {
 }
 
 int gif_to_col(gd_GIF *gif, const char *image_path) {
-    // TODO: Get gif colour palette
-
-    // TODO: Re-reference colour values to closest match on greyscale colour palette
-
     // Convert gif frame to image
-    uint8_t *image_data = malloc(COL_SIZE);
-    memcpy(image_data, gif->frame, COL_SIZE);
+    uint8_t *palette = malloc(COL_SIZE);
+    memcpy(palette, gif->frame, COL_SIZE);
     gd_close_gif(gif);
+
+    // Scale palette colour values
+    for(int i = 0; i < COL_SIZE; i++) {
+        // Check colour is valid
+        if(palette[i] >= 64) {
+            free(palette);
+            fprintf(stderr, "Unsupported colour palette value\n");
+            return 0;
+        }
+
+        // Divide by 4 to scale to 64 colours
+        palette[i] /= 4;
+    }
 
     // Open image
     FILE *image_pointer = NULL;
     if ((image_pointer = fopen(image_path, "wb")) == NULL) {
+        free(palette);
         fprintf(stderr, "Error creating image file\n");
         return 0;
     }
 
     // Write image data to file
-    int write_status = fwrite(image_data, COL_SIZE, 1, image_pointer);
+    int write_status = fwrite(palette, COL_SIZE, 1, image_pointer);
     fclose(image_pointer);
-    free(image_data);
+    free(palette);
     if (write_status != 1) {
         fprintf(stderr, "Error writing image data to file\n");
         return 0;
     }
 
-    // Close and return
     return 1;
 }
 
@@ -257,6 +266,7 @@ int gif_to_mph(gd_GIF *gif, const char *image_path) {
     // Open image
     FILE *image_pointer = NULL;
     if ((image_pointer = fopen(image_path, "wb")) == NULL) {
+        free(image_data);
         fprintf(stderr, "Error creating image file\n");
         return 0;
     }
@@ -270,7 +280,6 @@ int gif_to_mph(gd_GIF *gif, const char *image_path) {
         return 0;
     }
 
-    // Close and return
     return 1;
 }
 
@@ -285,6 +294,7 @@ int gif_to_raw(gd_GIF *gif, const char *image_path) {
     // Open image
     FILE *image_pointer = NULL;
     if ((image_pointer = fopen(image_path, "wb")) == NULL) {
+        free(image_data);
         fprintf(stderr, "Error creating image file\n");
         return 0;
     }
@@ -300,7 +310,6 @@ int gif_to_raw(gd_GIF *gif, const char *image_path) {
         return 0;
     }
 
-    // Close and return
     return 1;
 }
 
@@ -317,6 +326,7 @@ int gif_to_tm(gd_GIF *gif, const char *palette_path, const char *image_path) {
     // Open image
     FILE *image_pointer = NULL;
     if ((image_pointer = fopen(image_path, "wb")) == NULL) {
+        free(image_data);
         fprintf(stderr, "Error creating image file\n");
         return 0;
     }
@@ -330,7 +340,6 @@ int gif_to_tm(gd_GIF *gif, const char *palette_path, const char *image_path) {
         return 0;
     }
 
-    // Close and return
     return 1;
 }
 
