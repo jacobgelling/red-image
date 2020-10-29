@@ -178,8 +178,6 @@ int image_to_gif(const char *image_path, const char *palette_path, const char *g
             fprintf(stderr, "Unsupported image type or size\n");
             return 0;
     }
-
-    return 1;
 }
 
 int embedded_image_to_gif(const char *image_path, const char *gif_path) {
@@ -210,8 +208,6 @@ int embedded_image_to_gif(const char *image_path, const char *gif_path) {
             fprintf(stderr, "Unsupported image type or size\n");
             return 0;
     }
-
-    return 1;
 }
 
 int gif_to_col(gd_GIF *gif, const char *image_path) {
@@ -394,8 +390,6 @@ int gif_to_image(const char *gif_path, const char *palette_path, const char *ima
             fprintf(stderr, "Unsupported gif size\n");
             return 0;
     }
-
-    return 1;
 }
 
 int gif_to_embedded_image(const char *gif_path, const char *image_path) {
@@ -433,8 +427,6 @@ int gif_to_embedded_image(const char *gif_path, const char *image_path) {
             fprintf(stderr, "Unsupported gif size\n");
             return 0;
     }
-
-    return 1;
 }
 
 int read_palette(uint8_t *palette, FILE *palette_pointer) {
