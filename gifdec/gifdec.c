@@ -44,11 +44,16 @@ gd_open_gif(const char *fname)
     uint8_t sigver[3];
     uint16_t width, height, depth;
     uint8_t fdsz, bgidx, aspect;
+    int i;
+    uint8_t *bgcolor;
     int gct_sz;
     gd_GIF *gif;
 
     fd = open(fname, O_RDONLY);
     if (fd == -1) return NULL;
+#ifdef _WIN32
+    setmode(fd, O_BINARY);
+#endif
     /* Header */
     read(fd, sigver, 3);
     if (memcmp(sigver, "GIF", 3) != 0) {
@@ -57,7 +62,7 @@ gd_open_gif(const char *fname)
     }
     /* Version */
     read(fd, sigver, 3);
-    if (memcmp(sigver, "89a", 3) != 0 && memcmp(sigver, "87a", 3) != 0) {
+    if (memcmp(sigver, "89a", 3) != 0) {
         fprintf(stderr, "invalid version\n");
         goto fail;
     }
@@ -96,6 +101,10 @@ gd_open_gif(const char *fname)
     gif->frame = &gif->canvas[3 * width * height];
     if (gif->bgindex)
         memset(gif->frame, gif->bgindex, gif->width * gif->height);
+    bgcolor = &gif->palette->colors[gif->bgindex*3];
+    if (bgcolor[0] || bgcolor[1] || bgcolor [2])
+        for (i = 0; i < gif->width * gif->height; i++)
+            memcpy(&gif->canvas[i*3], bgcolor, 3);
     gif->anim_start = lseek(fd, 0, SEEK_CUR);
     goto ok;
 fail:
@@ -477,6 +486,12 @@ gd_render_frame(gd_GIF *gif, uint8_t *buffer)
 {
     memcpy(buffer, gif->canvas, gif->width * gif->height * 3);
     render_frame_rect(gif, buffer);
+}
+
+int
+gd_is_bgcolor(gd_GIF *gif, uint8_t color[3])
+{
+    return !memcmp(&gif->palette->colors[gif->bgindex*3], color, 3);
 }
 
 void
