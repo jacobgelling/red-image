@@ -8,7 +8,7 @@ The following file types from Big Red Racing are supported.
  * `.TM` textures (require a colour palette to be given)
 
 ## Usage
-The latest binaries for Windows and Debian are available at [GitHub Releases](https://github.com/jacobgelling/red-image/releases/latest).
+The latest binaries for Windows, Debian and macOS are available at [GitHub Releases](https://github.com/jacobgelling/red-image/releases/latest).
 
 To decode a given image `DECALS.TM` with palette `DEFAULT.COL` to a GIF `decals.gif`, execute the following.
 ```bash
